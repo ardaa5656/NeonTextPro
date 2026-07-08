@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="En iyi Şekilli Nick ve Yazı Oluşturucu! Instagram Bio, TikTok, Discord ve e-ticaret markalarınız için estetik yazılar oluşturun.">
+    <title>NeonText | Sosyal Medya ve E-Ticaret Araçları</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        neon: {
+                            cyan: '#00f3ff',
+                            pink: '#ff0055',
+                            purple: '#b026ff',
+                            dark: '#0a0a0f',
+                            card: '#13131c',
+                            cardhover: '#1c1c28'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap');
+        
+        body {
+            background-color: #0a0a0f;
+            color: #e2e8f0;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(0, 243, 255, 0.04) 0%, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(255, 0, 85, 0.04) 0%, transparent 50%);
+            background-attachment: fixed;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .neon-text-cyan { text-shadow: 0 0 10px rgba(0, 243, 255, 0.7), 0 0 20px rgba(0, 243, 255, 0.5); }
+        .neon-text-pink { text-shadow: 0 0 10px rgba(255, 0, 85, 0.7), 0 0 20px rgba(255, 0, 85, 0.5); }
+        .neon-text-purple { text-shadow: 0 0 10px rgba(176, 38, 255, 0.7), 0 0 20px rgba(176, 38, 255, 0.5); }
+
+        .neon-input:focus {
+            outline: none;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
+            border-color: #00f3ff;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0a0f; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #b026ff; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Card Fixes */
+        .style-card {
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255,255,255,0.05);
+            height: auto; 
+            min-height: 140px; 
+        }
+        .style-card:hover {
+            border-color: rgba(0, 243, 255, 0.3);
+            background-color: #1c1c28;
+            transform: translateY(-2px);
+        }
+
+        /* Category Buttons */
+        .category-btn.active {
+            background: linear-gradient(90deg, #b026ff, #ff0055);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(255, 0, 85, 0.3);
+        }
+        
+        /* Mobile Menu Animation */
+        #mobileMenu {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        #mobileMenu.open {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        /* Toast */
+        #toast {
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s, bottom 0.3s;
+        }
+        #toast.show {
+            visibility: visible;
+            opacity: 1;
+            bottom: 30px;
+        }
+
+        /* Unicode Display */
+        .fancy-text-display {
+            line-height: 1.6;
+            padding-top: 4px;
+            padding-bottom: 4px;
+            word-break: break-all;
+            overflow-wrap: anywhere;
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col">
+
+    <!-- Header & Navigation -->
+    <header class="border-b border-gray-800 bg-neon-dark/90 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+            
+            <!-- Logo -->
+            <button onclick="navigate('home')" class="flex items-center gap-2 group focus:outline-none">
+                <i class="fa-solid fa-bolt text-neon-cyan text-2xl group-hover:drop-shadow-[0_0_8px_rgba(0,243,255,0.8)] transition-all"></i>
+                <h1 class="text-2xl font-extrabold tracking-tight">
+                    <span class="text-white">Neon</span><span class="text-neon-cyan group-hover:neon-text-cyan transition-all">Text</span>
+                </h1>
+            </button>
+
+            <!-- Desktop Nav -->
+            <nav class="hidden md:flex items-center gap-8">
+                <button onclick="navigate('home')" class="text-gray-300 hover:text-white font-medium transition-colors">Ana Sayfa</button>
+                <button onclick="navigate('tool')" class="text-gray-300 hover:text-white font-medium transition-colors flex items-center gap-2">
+                    <i class="fa-solid fa-wand-magic-sparkles text-neon-purple"></i> Araçlar
+                </button>
+                <a href="#iletisim" onclick="navigate('home')" class="text-gray-300 hover:text-white font-medium transition-colors">İletişim</a>
+                <button onclick="navigate('tool')" class="bg-gradient-to-r from-neon-purple to-neon-pink px-5 py-2 rounded-full text-white font-semibold hover:shadow-[0_0_15px_rgba(255,0,85,0.5)] transition-all">
+                    Hemen Başla
+                </button>
+            </nav>
+
+            <!-- Mobile Hamburger Button -->
+            <button id="menuBtn" class="md:hidden text-2xl text-gray-300 hover:text-white focus:outline-none p-2" onclick="toggleMenu()">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobileMenu" class="fixed inset-0 bg-neon-dark/95 backdrop-blur-lg z-40 md:hidden flex flex-col pt-24 px-6 gap-6">
+        <button class="absolute top-6 right-6 text-3xl text-gray-400 hover:text-white" onclick="toggleMenu()">
+            <i class="fa-solid fa-times"></i>
+        </button>
+        <button onclick="navigate('home'); toggleMenu()" class="text-2xl font-bold text-left text-white border-b border-gray-800 pb-4">Ana Sayfa</button>
+        <button onclick="navigate('tool'); toggleMenu()" class="text-2xl font-bold text-left text-white border-b border-gray-800 pb-4 flex items-center gap-3">
+            <i class="fa-solid fa-wand-magic-sparkles text-neon-cyan"></i> Şekilli Yazı Oluşturucu
+        </button>
+        <button onclick="navigate('home'); toggleMenu(); setTimeout(() => document.getElementById('iletisim').scrollIntoView(), 100)" class="text-2xl font-bold text-left text-white border-b border-gray-800 pb-4">SEO ve E-Ticaret</button>
+    </div>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="flex-grow w-full">
+
+        <!-- ============================================== -->
+        <!-- VIEW: HOME PAGE (ANA SAYFA)                    -->
+        <!-- ============================================== -->
+        <div id="view-home" class="block">
+            
+            <!-- Hero Section -->
+            <section class="max-w-6xl mx-auto px-4 py-16 md:py-24 text-center">
+                <div class="inline-block mb-4 px-4 py-1.5 rounded-full bg-gray-800/50 border border-gray-700 text-sm text-neon-cyan font-medium">
+                    <i class="fa-solid fa-rocket mr-2"></i>İçerik Üreticileri İçin Tasarlandı
+                </div>
+                <h2 class="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
+                    Sosyal Medyada ve E-Ticarette <br/>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-neon-cyan via-neon-purple to-neon-pink">Farkınızı Belli Edin</span>
+                </h2>
+                <p class="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-10">
+                    Instagram biyografinizden YouTube kanal açıklamanıza, Discord sunucularından e-ticaret marka isimlerinize kadar her yerde dikkat çeken 130+ estetik fontu saniyeler içinde oluşturun.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button onclick="navigate('tool')" class="bg-white text-black px-8 py-4 rounded-full font-bold text-lg hover:bg-gray-200 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+                        Şekilli Yazı Oluştur <i class="fa-solid fa-arrow-right ml-2"></i>
+                    </button>
+                    <a href="#nasil-kullanilir" class="px-8 py-4 rounded-full font-bold text-lg border border-gray-700 hover:bg-gray-800 transition-colors">
+                        Nasıl Çalışır?
+                    </a>
+                </div>
+            </section>
+
+            <!-- Adsterra Home Banner -->
+            <div class="max-w-4xl mx-auto px-4 mb-16">
+                <div class="w-full h-[90px] bg-gray-800/30 border border-dashed border-gray-700 rounded-xl flex items-center justify-center text-gray-500">
+                    Reklam Alanı (Adsterra)
+                </div>
+            </div>
+
+            <!-- Features / E-Commerce Focus Grid -->
+            <section class="max-w-6xl mx-auto px-4 py-12" id="nasil-kullanilir">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Card 1 -->
+                    <div class="bg-neon-card border border-gray-800 p-8 rounded-2xl hover:border-neon-cyan transition-colors">
+                        <div class="w-14 h-14 bg-cyan-900/30 rounded-xl flex items-center justify-center mb-6 text-neon-cyan text-2xl">
+                            <i class="fa-brands fa-instagram"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 text-white">İçerik Üreticisi Kimliği</h3>
+                        <p class="text-gray-400">Instagram ve TikTok biyografileri ilk intiba için kritiktir. Özgün fontlarla etkileşimi ve takipçi dönüşümünü artırın.</p>
+                    </div>
+                    <!-- Card 2 -->
+                    <div class="bg-neon-card border border-gray-800 p-8 rounded-2xl hover:border-neon-purple transition-colors">
+                        <div class="w-14 h-14 bg-purple-900/30 rounded-xl flex items-center justify-center mb-6 text-neon-purple text-2xl">
+                            <i class="fa-solid fa-store"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 text-white">E-Ticaret ve Markalaşma</h3>
+                        <p class="text-gray-400">Butik sayfanız veya ürün vitrininiz için dikkat çekici başlıklar oluşturun. Profesyonel görünen sembollerle güven verin.</p>
+                    </div>
+                    <!-- Card 3 -->
+                    <div class="bg-neon-card border border-gray-800 p-8 rounded-2xl hover:border-neon-pink transition-colors">
+                        <div class="w-14 h-14 bg-pink-900/30 rounded-xl flex items-center justify-center mb-6 text-neon-pink text-2xl">
+                            <i class="fa-solid fa-bolt"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 text-white">Tek Tıkla SEO Uyumlu</h3>
+                        <p class="text-gray-400">Tamamen Unicode standartlarında yazılar üretiyoruz. Tüm platformlarda cihaz fark etmeksizin (iOS/Android) kusursuz görünür.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SEO Content Section -->
+            <section class="max-w-4xl mx-auto px-4 py-16" id="iletisim">
+                <article class="prose prose-invert lg:prose-lg mx-auto">
+                    <h2 class="text-3xl font-bold text-white mb-6">Neden Şekilli Nick ve Yazı Kullanmalısınız?</h2>
+                    <p class="text-gray-300 leading-relaxed mb-6">
+                        İster Sağlık Yönetimi alanında profesyonel bir LinkedIn profili hazırlıyor olun, ister YouTube'da yeni bir girişim başlatıyor olun; dijital dünyada dikkat çekmek zorundayız. Standart klavye fontları artık milyonlarca profil arasında kaybolmanıza neden oluyor. <strong>NeonText Şekilli Yazı Oluşturucu</strong>, e-ticaret metinlerinden oyun nicklerine kadar her alanda karakterinize uygun stili bulmanızı sağlar.
+                    </p>
+                    <h3 class="text-xl font-bold text-neon-cyan mt-8 mb-4">Uygulama İndirmeye Gerek Yok!</h3>
+                    <p class="text-gray-300 leading-relaxed mb-6">
+                        Telefonunuzu yoran üçüncü parti klavye uygulamalarına ihtiyacınız yok. Aracımıza girin, metninizi yazın ve "Kopyala" butonuna basın. Instagram hikayelerinizde, WhatsApp durumlarınızda veya Discord özel mesajlarınızda anında kullanmaya başlayın.
+                    </p>
+                </article>
+            </section>
+        </div>
+
+
+        <!-- ============================================== -->
+        <!-- VIEW: TOOL PAGE (ŞEKİLLİ YAZI OLUŞTURUCU)      -->
+        <!-- ============================================== -->
+        <div id="view-tool" class="hidden">
+            <div class="max-w-6xl mx-auto px-4 py-8">
+                
+                <!-- Tool Header / Input -->
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl md:text-5xl font-bold mb-4">Şekilli Yazı <span class="text-neon-cyan">Oluşturucu</span></h2>
+                    <p class="text-gray-400 mb-6 max-w-xl mx-auto text-sm md:text-base">Metninizi aşağıya girin ve saniyeler içinde yüzlerce farklı stilde kopyalayın.</p>
+                    
+                    <div class="relative max-w-3xl mx-auto">
+                        <textarea id="mainInput" rows="2" class="w-full bg-neon-card border border-gray-700 rounded-2xl p-4 text-xl sm:text-2xl text-center text-white placeholder-gray-600 neon-input resize-none transition-all" placeholder="Buraya yazın..."></textarea>
+                        <div class="absolute right-4 bottom-4 text-gray-500 text-xs font-mono bg-gray-800 px-2 py-1 rounded" id="charCount">0</div>
+                    </div>
+                </div>
+
+                <!-- Adsterra Banner Area 1 -->
+                <div class="mb-8 flex justify-center">
+                    <div class="w-full max-w-[728px] h-[90px] bg-gray-800/30 border border-dashed border-gray-600 rounded-lg flex items-center justify-center text-gray-500 text-sm">
+                        Adsterra Reklam Alanı
+                    </div>
+                </div>
+
+                <!-- Categories & Search Bar -->
+                <div class="bg-neon-card/50 border border-gray-800 rounded-xl p-4 mb-8 sticky top-[72px] z-30 backdrop-blur-md">
+                    <div class="flex flex-col lg:flex-row gap-4 items-center justify-between">
+                        
+                        <!-- Scrollable Categories -->
+                        <div class="w-full lg:w-auto overflow-x-auto pb-2 lg:pb-0 scrollbar-hide flex gap-2" id="categoryNav">
+                            <button onclick="filterCategory('all', this)" class="category-btn active px-5 py-2 rounded-lg bg-gray-800 text-sm font-semibold whitespace-nowrap transition-all border border-transparent">Tümü</button>
+                            <button onclick="filterCategory('instagram', this)" class="category-btn px-5 py-2 rounded-lg bg-gray-800/50 text-gray-400 hover:text-white text-sm font-semibold whitespace-nowrap transition-all border border-gray-700"><i class="fa-brands fa-instagram mr-2"></i>Instagram</button>
+                            <button onclick="filterCategory('tiktok', this)" class="category-btn px-5 py-2 rounded-lg bg-gray-800/50 text-gray-400 hover:text-white text-sm font-semibold whitespace-nowrap transition-all border border-gray-700"><i class="fa-brands fa-tiktok mr-2"></i>TikTok</button>
+                            <button onclick="filterCategory('discord', this)" class="category-btn px-5 py-2 rounded-lg bg-gray-800/50 text-gray-400 hover:text-white text-sm font-semibold whitespace-nowrap transition-all border border-gray-700"><i class="fa-brands fa-discord mr-2"></i>Discord</button>
+                            <button onclick="filterCategory('gaming', this)" class="category-btn px-5 py-2 rounded-lg bg-gray-800/50 text-gray-400 hover:text-white text-sm font-semibold whitespace-nowrap transition-all border border-gray-700"><i class="fa-solid fa-gamepad mr-2"></i>Oyunlar</button>
+                        </div>
+
+                        <!-- Search -->
+                        <div class="w-full lg:w-72 relative flex-shrink-0">
+                            <i class="fa-solid fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                            <input type="text" id="searchInput" class="w-full bg-gray-900 border border-gray-700 rounded-lg pl-11 pr-4 py-2.5 text-sm text-white focus:outline-none focus:border-neon-cyan transition-colors" placeholder="Stil ara (Örn: kalın, el yazısı)...">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Count -->
+                <div class="text-sm text-gray-400 mb-4 px-2">
+                    <span id="resultCount" class="font-bold text-neon-cyan text-lg">0</span> adet stil listeleniyor
+                </div>
+
+                <!-- Results Grid -->
+                <div id="resultsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-12">
+                    <!-- JavaScript will populate this area -->
+                </div>
+
+                <!-- Adsterra Native Area -->
+                <div class="mb-12 flex justify-center">
+                    <div class="w-full max-w-[300px] h-[250px] bg-gray-800/30 border border-dashed border-gray-600 rounded-lg flex items-center justify-center text-gray-500 text-sm">
+                        Adsterra Native Reklam Alanı
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer - YENİLENMİŞ LİNKLER -->
+    <footer class="border-t border-gray-800 bg-neon-dark py-8 text-center text-sm text-gray-500 mt-auto">
+        <div class="max-w-6xl mx-auto px-4">
+            <p class="mb-4">&copy; 2026 NeonText Pro. Tüm hakları saklıdır.</p>
+            <div class="flex justify-center gap-6">
+                <!-- href linkleri HTML dosyalarına yönlendirildi -->
+                <a href="gizlilik.html" class="hover:text-neon-cyan transition-colors">Gizlilik Politikası</a>
+                <a href="sartlar.html" class="hover:text-neon-pink transition-colors">Kullanım Şartları</a>
+                <a href="hakkimizda.html" class="hover:text-white transition-colors">Hakkımızda</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-6 py-3 rounded-xl shadow-[0_10px_25px_rgba(16,185,129,0.3)] font-semibold z-50 flex items-center gap-3">
+        <i class="fa-solid fa-circle-check text-xl"></i> Pano'ya Kopyalandı!
+    </div>
+
+    <!-- Hidden Textarea for Copying -->
+    <textarea id="hiddenCopyArea" class="sr-only" aria-hidden="true" tabindex="-1"></textarea>
+
+    <!-- Application Script -->
+    <script>
+        // --- View Management (SPA Logic) ---
+        function navigate(viewName) {
+            window.scrollTo(0, 0);
+            document.getElementById('view-home').classList.add('hidden');
+            document.getElementById('view-tool').classList.add('hidden');
+            
+            if(viewName === 'home') {
+                document.getElementById('view-home').classList.remove('hidden');
+                document.getElementById('view-home').classList.add('block');
+            } else if (viewName === 'tool') {
+                document.getElementById('view-tool').classList.remove('hidden');
+                document.getElementById('view-tool').classList.add('block');
+                // Focus input when opening tool
+                setTimeout(() => document.getElementById('mainInput').focus(), 100);
+            }
+        }
+
+        // --- Mobile Menu Management ---
+        function toggleMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('open');
+            document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
+        }
+
+        // --- Core Text Mapping Data ---
+        const chars = {
+            normal: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+            bold: "𝐚𝐛𝐜𝐝𝐞𝐟𝐠𝐡𝐢𝐣𝐤𝐥𝐦𝐧𝐨𝐩𝐪𝐫𝐬𝐭𝐮𝐯𝐰𝐱𝐲𝐳𝐀𝐁𝐂𝐃𝐄𝐅𝐆𝐇𝐈𝐉𝐊𝐋𝐌𝐍𝐎𝐏𝐐𝐑𝐒𝐓𝐔𝐕𝐖𝐗𝐘𝐙𝟎𝟏𝟐𝟑𝟒𝟓𝟔𝟕𝟖𝟗",
+            italic: "𝑎𝑏𝑐𝑑𝑒𝑓𝑔ℎ𝑖𝑗𝑘𝑙𝑚𝑛𝑜𝑝𝑞𝑟𝑠𝑡𝑢𝑣𝑤𝑥𝑦𝑧𝐴𝐵𝐶𝐷𝐸𝐹𝐺𝐻𝐼𝐽𝐾𝐿𝑀𝑁𝑂𝑃𝑄𝑅𝑆𝑇𝑈𝑉𝑊𝑋𝑌𝑍0123456789",
+            boldItalic: "𝒂𝒃𝒄𝒅𝒆𝒇𝒈𝒉𝒊𝒋𝒌𝒍𝒎𝒏𝒐𝒑𝒒𝒓𝒔𝒕𝒖𝒗𝒘𝒙𝒚𝒛𝑨𝑩𝑪𝑫𝑬𝑭𝑮𝑯𝑰𝑱𝑲𝑳𝑴𝑵𝑶𝑷𝑸𝑹𝑺𝑻𝑼𝑽𝑾𝑿𝒀𝒁𝟎𝟏𝟐𝟑𝟒𝟓𝟔𝟕𝟖𝟗",
+            script: "𝒶𝒷𝒸𝒹𝑒𝒻𝑔𝒽𝒾𝒿𝓀𝓁𝓂𝓃𝑜𝓅𝓆𝓇𝓈𝓉𝓊𝓋𝓌𝓍𝓎𝓏𝒜ℬ𝒞𝒟ℰℱ𝒢ℋℐ𝒥𝒦ℒℳ𝒩𝒪𝒫𝒬ℛ𝒮𝒯𝒰𝒱𝒲𝒳𝒴𝒵𝟢𝟣𝟤𝟥𝟦𝟧𝟨𝟩𝟪𝟫",
+            scriptBold: "𝓪𝓫𝓬𝓭𝓮𝓯𝓰𝓱𝓲𝓳𝓴𝓵𝓶𝓷𝓸𝓹𝓺𝓻𝓼𝓽𝓾𝓿𝔀𝔁𝔂𝔃𝓐𝓑𝓒𝓓𝓔𝓕𝓖𝓗𝓘𝓙𝓚𝓛𝓜𝓝𝓞𝓟𝓠𝓡𝓢𝓣𝓤𝓥𝓦𝓧𝓨𝓩𝟎𝟏𝟐𝟑𝟒𝟓𝟔𝟕𝟖𝟗",
+            fraktur: "𝔞𝔟𝔠𝔡𝔢𝔣𝔤𝔥𝔦𝔧𝔨𝔩𝔪𝔫𝔬𝔭𝔮𝔯𝔰𝔱𝔲𝔳𝔴𝔵𝔶𝔷𝔄𝔅ℭ𝔇𝔈𝔉𝔊ℌℑ𝔍𝔎𝔏𝔐𝔑𝔒𝔓𝔔ℜ𝔖𝔗𝔘𝔙𝔚𝔛𝔜ℨ0123456789",
+            frakturBold: "𝖆𝖇𝖈𝖉𝖊𝖋𝖌𝖍𝖎𝖏𝖐𝖑𝖒𝖓𝖔𝕻𝖖𝖗𝖘𝖙𝖚𝖛𝖜𝖝𝖞𝖟𝕬𝕭𝕮𝕯𝕰𝕱𝕲𝕳𝕴𝕵𝕶𝕷𝕸𝕹𝕺𝕻𝕼𝕽𝕾𝕿𝖀𝖁𝖂𝖃𝖄𝖅𝟎𝟏𝟐𝟑𝟒𝟓𝟔𝟕𝟖𝟗",
+            doubleStruck: "𝕒𝕓𝕔𝕕𝕖𝕗𝕘𝕙𝕚𝕛𝕜𝕝𝕞𝕟𝕠𝕡𝕢𝕣𝕤𝕥𝕦𝕧𝕨𝕩𝕪𝕫𝔸𝔹ℂ𝔻𝔼𝔽𝔾ℍ𝕀𝕁𝕂𝕃𝕄ℕ𝕆ℙℚℝ𝕊𝕋𝕌𝕍𝕎𝕏𝕐ℤ𝟘𝟙𝟚𝟛𝟜𝟝𝟞𝟟𝟠𝟡",
+            sans: "𝖺𝖻𝖼𝖽𝖾𝖿𝗀𝗁𝗂𝗃𝗄𝗅𝗆𝗇𝗈𝗉𝗊𝗋𝗌𝗍𝗎𝗏𝗐𝗑𝗒𝗓𝖠𝖡𝖢𝖣𝖤𝖥𝖦𝖧𝖨𝖩𝖪𝖫𝖬𝖭𝖮𝖯𝖰𝖱𝖲𝖳𝖴𝖵𝖶𝖷𝖸𝖹𝟢𝟣𝟤𝟥𝟦𝟧𝟨𝟩𝟪𝟫",
+            sansBold: "𝗮𝗯𝗰𝗱𝗲𝗳𝗴𝗵𝗶𝗷𝗸𝗹𝗺𝗻𝗼𝗽𝗾𝗿𝘀𝘁𝘂𝘃𝘄𝘅𝘆𝘇𝗔𝗕𝗖𝗗𝗘𝗙𝗚𝗛𝗜𝗝𝗞𝗟𝗠𝗡𝗢𝗣𝗤𝗥𝗦𝗧𝗨𝗩𝗪𝗫𝗬𝗭𝟬𝟭𝟮𝟯𝟰𝟱𝟲𝟳𝟴𝟵",
+            monospace: "𝚊𝚋𝚌𝚍𝚎𝚏𝚐𝚑𝚒𝚓𝚔𝚕𝚖𝚗𝚘𝚙𝚚𝚛𝚜𝚝𝚞𝚟𝚠𝚡𝚢𝚣𝙰𝙱𝙲𝙳𝙴𝙵𝙶𝙷𝙸𝙹𝙺𝙻𝙼𝙽𝙾𝙿𝚀𝚁𝚂𝚃𝚄𝚅𝚆𝚇𝚈𝚉0123456789",
+            fullwidth: "ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ０１２３４５６７８９",
+            circled: "ⓐⓑⓒⓓⓔⓕⓖⓗⓘⓙⓚⓛⓜⓝⓞⓟⓠⓡⓢⓣⓤⓥⓦⓧⓨⓩⒶⒷⒸⒹⒺⒻⒼⒽⒾⒿⓀⓁⓂⓃⓄⓅⓆⓇⓈⓉⓊⓋⓌⓍⓎⓏ⓪①②③④⑤⑥⑦⑧⑨",
+            squared: "🄰🄱🄲🄳🄴🄵🄶🄷🄸🄹🄺🄻🄼🄽🄾🄿🅀🅁🅂🅃🅄🅅🅆🅇🅈🅉🄰🄱🄲🄳🄴🄵🄶🄷🄸🄹🄺🄻🄼🄽🄾🄿🅀🅁🅂🅃🅄🅅🅆🅇🅈🅉0123456789",
+            negativeCircled: "🅐🅑🅒🅓🅔🅕🅖🅗🅘🅙🅚🅛🅜🅝🅞🅟🅠🅡🅢🅣🅤🅥🅦🅧🅨🅩🅐🅑🅒🅓🅔🅕🅖🅗🅘🅙🅚🅛🅜🅝🅞🅟🅠🅡🅢🅣🅤🅥🅦🅧🅨🅩⓿❶❷❸❹❺❻❼❽❾",
+            negativeSquared: "🅰🅱🅲🅳🅴🅵🅶🅷🅸🅹🅺🅻🅼🅽🅾🅿🆀🆁🆂🆃🆄🆅🆆🆇🆈🆉🅰🅱🅲🅳🅴🅵🅶🅷🅸🅹🅺🅻🅼🅽🅾🅿🆀🆁🆂🆃🆄🆅🆆🆇🆈🆉0123456789",
+            smallCaps: "ᴀʙᴄᴅᴇғɢʜɪᴊᴋʟᴍɴᴏᴘǫʀsᴛᴜᴠᴡxʏᴢABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+            inverted: "ɐqɔpǝɟƃɥıɾʞlɯuodbɹsʇnʌʍxʎz∀qƆPƎℲפHIſʞ˥WNOԀQᴚS⊥∩ΛMX⅄Z0ƖᄅƐㄣϛ9ㄥ86",
+            asian: "卂乃匚刀乇下Ꮆ卄工丁长乚从𠘨口尸Ｑ尺丂丅凵リ山乂丫乙卂乃匚刀乇下Ꮆ卄工丁长乚从𠘨口尸Ｑ尺丂丅凵リ山乂丫乙0123456789"
+        };
+
+        function mapText(text, mapKey) {
+            let result = '';
+            const targetMap = chars[mapKey];
+            if(!targetMap) return text;
+            
+            const textChars = Array.from(text);
+            const targetChars = Array.from(targetMap);
+            const normalChars = Array.from(chars.normal);
+
+            for (let i = 0; i < textChars.length; i++) {
+                const char = textChars[i];
+                const index = normalChars.indexOf(char);
+                if (index !== -1) {
+                    result += targetChars[index] || char;
+                } else {
+                    result += char;
+                }
+            }
+            return result;
+        }
+
+        // Modifiers
+        function addStrikethrough(text) { return Array.from(text).map(c => c + '\u0336').join(''); }
+        function addUnderline(text) { return Array.from(text).map(c => c + '\u0332').join(''); }
+        
+        function zalgoText(text, intensity = 1) {
+            const zalgos = ['\u0300','\u0301','\u0302','\u0303','\u0304','\u0305','\u0306','\u0307','\u0308','\u0309','\u030A','\u030B','\u030C','\u030D','\u030E','\u030F','\u0310','\u0311','\u0312','\u0313','\u0314','\u0315','\u0316','\u0317','\u0318','\u0319','\u031A','\u031B','\u031C','\u031D','\u031E','\u031F','\u0320','\u0321','\u0322','\u0323','\u0324','\u0325','\u0326','\u0327','\u0328','\u0329','\u032A','\u032B','\u032C','\u032D','\u032E','\u032F','\u0330','\u0331','\u0332','\u0333','\u0334','\u0335','\u0336','\u0337','\u0338','\u0339','\u033A','\u033B','\u033C','\u033D','\u033E','\u033F'];
+            return Array.from(text).map(char => {
+                let z = char;
+                let numMarks = Math.floor(Math.random() * 2 * intensity) + 1;
+                for(let i=0; i<numMarks; i++) { z += zalgos[Math.floor(Math.random() * zalgos.length)]; }
+                return z;
+            }).join('');
+        }
+
+        // Decorators
+        const dec = {
+            sparkles: t => `✨ ${t} ✨`, stars: t => `★ ${t} ★`, music: t => `♫ ${t} ♫`,
+            hearts: t => `♥ ${t} ♥`, wings: t => `ʚ ${t} ɞ`, swords: t => `⚔ ${t} ⚔`,
+            brackets: t => `【 ${t} 】`, flowers: t => `❀ ${t} ❀`, arrows: t => `➔ ${t} ➔`,
+            crown: t => `♛ ${t} ♛`, fire: t => `🔥 ${t} 🔥`, cross: t => `✞ ${t} ✞`,
+            japanese: t => `ミ★ ${t} ★彡`, line: t => `━━ ${t} ━━`, wave: t => `〰 ${t} 〰`
+        };
+
+        // --- Build Styles Dictionary ---
+        const stylesDef = [];
+
+        Object.keys(chars).forEach(key => {
+            if(key === 'normal') return;
+            stylesDef.push({ 
+                name: key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()), 
+                func: t => mapText(t, key), 
+                tags: ['all', 'discord', 'tiktok', 'instagram'] 
+            });
+        });
+
+        const baseKeys = ['normal', 'bold', 'script', 'monospace'];
+        baseKeys.forEach(key => {
+            let n = key === 'normal' ? 'Klasik' : key;
+            stylesDef.push({ name: `${n} Çizili`, func: t => addStrikethrough(mapText(t, key)), tags: ['all', 'discord'] });
+            stylesDef.push({ name: `${n} Altçizgi`, func: t => addUnderline(mapText(t, key)), tags: ['all', 'instagram'] });
+        });
+
+        stylesDef.push({ name: "Gizemli Zalgo", func: t => zalgoText(t, 2), tags: ['all', 'discord', 'gaming'] });
+
+        const decBases = ['normal', 'scriptBold', 'bold', 'asian'];
+        Object.keys(dec).forEach(dKey => {
+            decBases.forEach(bKey => {
+                const trNames = { sparkles: "Işıltılı", stars: "Yıldızlı", music: "Müzikli", hearts: "Kalpli", wings: "Kanatlı", swords: "Kılıçlı", brackets: "Köşeli P.", flowers: "Çiçekli", arrows: "Oklu", crown: "Taçlı", fire: "Ateşli", cross: "Haçlı", japanese: "Estetik", line: "Çizgili", wave: "Dalgalı" };
+                let baseName = bKey === 'normal' ? 'Sade' : bKey === 'scriptBold' ? 'El Yazısı' : bKey === 'bold' ? 'Kalın' : 'Ninja';
+                
+                let tagList = ['all'];
+                if(['hearts','wings','flowers','sparkles','japanese'].includes(dKey)) tagList.push('instagram', 'tiktok');
+                if(['swords','fire','cross'].includes(dKey) || bKey==='asian') tagList.push('gaming', 'discord');
+
+                stylesDef.push({
+                    name: `${trNames[dKey]} ${baseName}`,
+                    func: t => dec[dKey](mapText(t, bKey)),
+                    tags: tagList
+                });
+            });
+        });
+
+        const allStyles = [...stylesDef.slice(0, 20), ...stylesDef.slice(20).sort(() => 0.5 - Math.random())];
+
+        // --- App State ---
+        let currentFilter = 'all';
+        let searchTerm = '';
+        let currentInput = 'Neon Text';
+
+        const inputEl = document.getElementById('mainInput');
+        const gridEl = document.getElementById('resultsGrid');
+        const countEl = document.getElementById('resultCount');
+        const searchEl = document.getElementById('searchInput');
+
+        function init() {
+            inputEl.value = currentInput;
+            updateGrid();
+
+            inputEl.addEventListener('input', (e) => {
+                currentInput = e.target.value || 'Neon Text';
+                document.getElementById('charCount').innerText = e.target.value.length;
+                updateGrid();
+            });
+
+            searchEl.addEventListener('input', (e) => {
+                searchTerm = e.target.value.toLowerCase();
+                updateGrid();
+            });
+        }
+
+        function filterCategory(cat, btnElement) {
+            currentFilter = cat;
+            
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active', 'bg-gray-800');
+                btn.classList.add('bg-gray-800/50', 'text-gray-400');
+            });
+            btnElement.classList.add('active');
+            btnElement.classList.remove('text-gray-400', 'bg-gray-800/50');
+
+            updateGrid();
+        }
+
+        function updateGrid() {
+            gridEl.innerHTML = '';
+            
+            let filteredStyles = allStyles.filter(s => {
+                const matchesCat = s.tags.includes(currentFilter);
+                const matchesSearch = s.name.toLowerCase().includes(searchTerm);
+                return matchesCat && matchesSearch;
+            });
+
+            countEl.innerText = filteredStyles.length;
+
+            if(filteredStyles.length === 0) {
+                gridEl.innerHTML = `<div class="col-span-full text-center text-gray-500 py-12 bg-gray-900/30 rounded-xl border border-dashed border-gray-700">Aramanıza uygun stil bulunamadı.</div>`;
+                return;
+            }
+
+            const fragment = document.createDocumentFragment();
+
+            filteredStyles.forEach(style => {
+                const generatedText = style.func(currentInput);
+                
+                const card = document.createElement('div');
+                card.className = "style-card bg-neon-card rounded-xl p-4 flex flex-col justify-between group";
+                
+                card.innerHTML = `
+                    <div>
+                        <div class="text-[10px] text-gray-500 mb-1 uppercase tracking-widest font-bold flex items-center justify-between">
+                            ${style.name}
+                        </div>
+                        <div class="text-lg text-white font-medium fancy-text-display mb-4">
+                            ${generatedText}
+                        </div>
+                    </div>
+                    <button onclick="copyText(this, \`${generatedText.replace(/`/g, '\\`').replace(/\\/g, '\\\\')}\`)" class="mt-auto w-full bg-gray-800 hover:bg-gray-700 text-gray-300 py-2 rounded-lg border border-gray-700 hover:border-neon-cyan transition-colors text-sm font-semibold flex items-center justify-center gap-2 group-hover:bg-gray-700 group-hover:text-white">
+                        <i class="fa-regular fa-copy"></i> Kopyala
+                    </button>
+                `;
+                fragment.appendChild(card);
+            });
+
+            gridEl.appendChild(fragment);
+        }
+
+        function copyText(btnElement, text) {
+            const hiddenArea = document.getElementById('hiddenCopyArea');
+            hiddenArea.value = text;
+            hiddenArea.focus();
+            hiddenArea.select();
+            
+            try {
+                document.execCommand('copy');
+                showToast();
+                
+                const originalHTML = btnElement.innerHTML;
+                btnElement.innerHTML = `<i class="fa-solid fa-check text-green-400"></i> <span class="text-green-400">Kopyalandı!</span>`;
+                btnElement.classList.add('border-green-400', 'bg-green-900/30');
+                
+                setTimeout(() => {
+                    btnElement.innerHTML = originalHTML;
+                    btnElement.classList.remove('border-green-400', 'bg-green-900/30');
+                }, 2000);
+            } catch (err) {
+                console.error('Kopyalama başarısız oldu', err);
+            }
+            
+            inputEl.focus();
+        }
+
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        window.onload = init;
+
+    </script>
+</body>
+</html>
